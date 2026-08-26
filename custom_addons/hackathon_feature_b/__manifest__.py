@@ -3,7 +3,7 @@
     'version': '1.0',
     'category': 'Custom',
     'summary': 'Feature B / Player AI Portal (Teammate B: Ashrith)',
-    'depends': ['hackathon_core'],
+    'depends': ['hackathon_core', 'website'],
     'data': [
         'views/feature_b_views.xml',
     ],
