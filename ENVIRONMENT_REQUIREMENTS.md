@@ -29,6 +29,7 @@ This executes:
 
 ### 3. PostgreSQL & Odoo Configuration (Full Production Deployment)
 
+- **Local Web Service URL:** `http://localhost:8069`
 - **Database Host & Port:** `localhost:5432`
 - **Standard Superuser / Role:** `odoo` (with `CREATEDB` privileges)
 - **Standard Test Database Name:** `test_db`
