@@ -1,5 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Player AI Portal Website Template -->
+    <template id="player_portal_page" name="QuickCourt Player Portal">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <section class="py-5 bg-dark text-white text-center">
+                    <div class="container">
+                        <h1 class="display-4 fw-bold">⚡ QuickCourt Player Portal</h1>
+                        <p class="lead">AI-Powered Smart Court Booking &amp; Real-time Availability</p>
+                    </div>
+                </section>
+
+                <section class="py-5">
+                    <div class="container">
+                        <div class="row">
+                            <!-- Venues & Courts List -->
+                            <div class="col-lg-8">
+                                <h3 class="mb-4">🏟️ Approved Venues &amp; Courts</h3>
+                                <t t-if="not courts">
+                                    <div class="alert alert-info">No active courts available right now.</div>
+                                </t>
+                                <div class="row">
+                                    <t t-foreach="courts" t-as="court">
+                                        <div class="col-md-6 mb-4">
+                                            <div class="card h-100 shadow-sm border-0">
+                                                <div class="card-body">
+                                                    <h5 class="card-title fw-bold" t-field="court.name"/>
+                                                    <h6 class="card-subtitle mb-2 text-muted" t-field="court.venue_id.name"/>
+                                                    <p class="card-text">
+                                                        <span class="badge bg-primary" t-if="court.is_indoor">Indoor</span>
+                                                        <span class="badge bg-secondary" t-if="not court.is_indoor">Outdoor</span>
+                                                        <span class="badge bg-success ms-2">$<t t-esc="court.price_hourly"/> / hr</span>
+                                                    </p>
+                                                    <button class="btn btn-outline-primary btn-sm w-100">Book Slot</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+
+                            <!-- AI Assistant Chat Widget -->
+                            <div class="col-lg-4">
+                                <div class="card shadow border-0">
+                                    <div class="card-header bg-primary text-white font-weight-bold">
+                                        🤖 QuickCourt AI Assistant
+                                    </div>
+                                    <div class="card-body bg-light" style="height: 350px; overflow-y: auto;" id="ai_chat_box">
+                                        <div class="p-2 mb-2 bg-white rounded shadow-sm">
+                                            <strong>AI:</strong> Welcome! Ask me to find available tennis, badminton, or indoor courts for you!
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="input-group">
+                                            <input type="text" id="ai_prompt_input" class="form-control" placeholder="Ask AI (e.g. Find indoor court)"/>
+                                            <button class="btn btn-primary" id="btn_send_ai">Send</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- Inherit Main View Form -->
     <record id="view_hackathon_item_form_inherit_b" model="ir.ui.view">
         <field name="name">hackathon.item.form.inherit.b</field>
         <field name="model">hackathon.item</field>
