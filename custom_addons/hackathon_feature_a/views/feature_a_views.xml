@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Inherited View for Core Hackathon Item -->
     <record id="view_hackathon_item_form_inherit_a" model="ir.ui.view">
         <field name="name">hackathon.item.form.inherit.a</field>
         <field name="model">hackathon.item</field>
@@ -10,4 +11,98 @@
             </xpath>
         </field>
     </record>
+
+    <!-- Tree View for Court Inspection -->
+    <record id="view_court_inspection_tree" model="ir.ui.view">
+        <field name="name">court.inspection.tree</field>
+        <field name="model">court.inspection</field>
+        <field name="arch" type="xml">
+            <tree string="Court Vision Inspections" decoration-danger="severity=='critical'" decoration-success="status=='resolved'">
+                <field name="name"/>
+                <field name="inspection_date"/>
+                <field name="court_id"/>
+                <field name="defect_type"/>
+                <field name="severity" widget="badge" decoration-danger="severity=='critical'" decoration-info="severity=='normal'"/>
+                <field name="status" widget="badge" decoration-warning="status=='in_progress'" decoration-success="status=='resolved'"/>
+                <field name="feature_a_score"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View for Court Inspection -->
+    <record id="view_court_inspection_form" model="ir.ui.view">
+        <field name="name">court.inspection.form</field>
+        <field name="model">court.inspection</field>
+        <field name="arch" type="xml">
+            <form string="Court Vision Inspection">
+                <header>
+                    <button name="action_run_vision_ai" string="Run Vision AI Scan" type="object" class="btn-primary"/>
+                    <button name="action_resolve_inspection" string="Resolve Inspection" type="object" class="btn-success" invisible="status == 'resolved'"/>
+                    <button name="action_lock_court" string="Trigger Emergency Lock" type="object" class="btn-danger" invisible="severity == 'critical'"/>
+                    <field name="status" widget="statusbar" statusbar_visible="logged,in_progress,resolved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="court_id"/>
+                            <field name="inspection_date"/>
+                            <field name="defect_type"/>
+                        </group>
+                        <group>
+                            <field name="severity" widget="badge"/>
+                            <field name="feature_a_score"/>
+                            <field name="ai_confidence"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="AI Vision Diagnostics" name="ai_notes">
+                            <field name="ai_inspection_notes" placeholder="AI Vision Scan Output &amp; Diagnostic Notes..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View for Court Inspection -->
+    <record id="view_court_inspection_search" model="ir.ui.view">
+        <field name="name">court.inspection.search</field>
+        <field name="model">court.inspection</field>
+        <field name="arch" type="xml">
+            <search string="Search Inspections">
+                <field name="name"/>
+                <field name="court_id"/>
+                <field name="defect_type"/>
+                <filter string="Critical Defects" name="critical_defects" domain="[('severity', '=', 'critical')]"/>
+                <filter string="Active Inspections" name="active_inspections" domain="[('status', 'in', ['logged', 'in_progress'])]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Court" name="group_court" context="{'group_by': 'court_id'}"/>
+                    <filter string="Severity" name="group_severity" context="{'group_by': 'severity'}"/>
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Window Action -->
+    <record id="action_court_inspection" model="ir.actions.act_window">
+        <field name="name">Vendor Court Inspections</field>
+        <field name="res_model">court.inspection</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_court_inspection_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Log a new Court Inspection or run an AI Vision Scan!
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu items -->
+    <menuitem id="menu_vendor_ai_root" name="Vendor AI Portal (Akthar)" sequence="10"/>
+    <menuitem id="menu_court_inspection" name="Vision Inspections" parent="menu_vendor_ai_root" action="action_court_inspection" sequence="1"/>
 </odoo>
